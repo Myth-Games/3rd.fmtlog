@@ -6,9 +6,9 @@ option(FMTLOG_USE_EXTERNAL_FMT "Use external fmt library" OFF)
 option(FMTLOG_BUILD_TESTS "Build fmtlog tests" OFF)
 
 if(MSVC)
-    add_compile_options(/std:c++latest)
+    #add_compile_options(/std:c++latest)
 else()
-    add_compile_options(-Wall -O3 -std=c++17)
+    add_compile_options(-Wall -O3)
     #add_compile_options(-Wall -Ofast -std=c++2a -DNDEBUG -march=skylake -flto -fno-exceptions -fno-rtti -fno-unwind-tables -fno-asynchronous-unwind-tables -DFMTLOG_NO_CHECK_LEVEL=1)
     #SET(CMAKE_AR  "gcc-ar")
     #SET(CMAKE_RANLIB  "gcc-ranlib")
@@ -29,6 +29,7 @@ include_directories(fmt/include)
 if (BUILD_SHARED_LIBS)
     add_library(fmtlog-shared SHARED fmtlog.cc)
     add_library(fmtlog::fmtlog ALIAS fmtlog-shared)
+    target_compile_features(fmtlog-shared PUBLIC cxx_std_17)
     target_link_libraries(fmtlog-shared fmt)
     target_include_directories(fmtlog-shared
         PUBLIC
@@ -37,6 +38,7 @@ if (BUILD_SHARED_LIBS)
     install(TARGETS fmtlog-shared)
 else ()
     add_library(fmtlog-static fmtlog.cc)
+    target_compile_features(fmtlog-static PUBLIC cxx_std_17)
     target_link_libraries(fmtlog-static fmt)
     target_include_directories(fmtlog-static
         PUBLIC
